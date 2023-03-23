@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:preferences_app_plantilla/preferences/preferences.dart';
+import 'package:preferences_app_plantilla/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'screens/screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Preferences.init();
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+        create: (_) => ThemeProvider(isDarkMode: Preferences.isDarkMode))
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +26,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routerName: (_) => const HomeScreen(),
         SettingsScreen.routerName: (_) => const SettingsScreen()
       },
-      theme: Preferences.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: Provider.of<ThemeProvider>(context).currentTheme,
     );
   }
 }
